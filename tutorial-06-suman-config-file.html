@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Tutorial: How to organize your test directory</title>
+    <title>JSDoc: Tutorial: 06-suman-config-file</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,43 +17,20 @@
 
 <div id="main">
 
-    <h1 class="page-title">Tutorial: How to organize your test directory</h1>
+    <h1 class="page-title">Tutorial: 06-suman-config-file</h1>
 
     <section>
 
 <header>
     
 
-    <h2>How to organize your test directory</h2>
+    <h2>06-suman-config-file</h2>
 </header>
 
 <article>
-    <p>The optimal way to organize your test directory for Suman usage is as follows:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/test-src</code></pre><p>src contains your test files, and if you want to transpile them, the directory structure will look like:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/test-src
----/test-target</code></pre><p>otherwise, if you have something like this, and you want to transpile the whole directory:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/unit-testing
----/integration-testing</code></pre><p>transpiling becomes:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/unit-testing
----/integration-testing
-
---test-target
----/.suman
----/fixtures
----/unit-testing
----/integration-testing</code></pre><p>so you have copied over a bunch of files that probably don't need transpilation, in fixtures, etc.</p>
+    <p>suman.conf.js should reside in the root of your project =&gt; 
+here's a gist with extra comments describing each property:</p>
+<script src="https://gist.github.com/ORESoftware/cedd024fe69e66ea7462dfd752bbd059.js"></script>
 </article>
 
 </section>

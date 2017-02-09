@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Tutorial: How to organize your test directory</title>
+    <title>JSDoc: Tutorial: 21-running-suman-against-shell-scripts</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,43 +17,39 @@
 
 <div id="main">
 
-    <h1 class="page-title">Tutorial: How to organize your test directory</h1>
+    <h1 class="page-title">Tutorial: 21-running-suman-against-shell-scripts</h1>
 
     <section>
 
 <header>
     
 
-    <h2>How to organize your test directory</h2>
+    <h2>21-running-suman-against-shell-scripts</h2>
 </header>
 
 <article>
-    <p>The optimal way to organize your test directory for Suman usage is as follows:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/test-src</code></pre><p>src contains your test files, and if you want to transpile them, the directory structure will look like:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/test-src
----/test-target</code></pre><p>otherwise, if you have something like this, and you want to transpile the whole directory:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/unit-testing
----/integration-testing</code></pre><p>transpiling becomes:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/unit-testing
----/integration-testing
-
---test-target
----/.suman
----/fixtures
----/unit-testing
----/integration-testing</code></pre><p>so you have copied over a bunch of files that probably don't need transpilation, in fixtures, etc.</p>
+    <h2>Hooking in shell scripts</h2><h3>=&gt; calling shell scripts instead of .js files from the test runner</h3><ul>
+<li><p>Make sure to put a hashbang at the top of your shell script =&gt; e.g. <code>#!/usr/bin/env bash</code>,
+this ensures your script will be run with the correct interpreter (bash, sh, zsh, etc). Suman uses
+child_process.spawn('/absolute/path/to/your/script'), so your script needs to be executable, and have
+the hashbang.</p>
+</li>
+<li><p>Your shell script can either:</p>
+<ol>
+<li><p>run its own tests, without invoking any JavaScript at all, and just return a 0 exit code upon success, 
+or non-zero exit code otherwise.</p>
+</li>
+<li><p>do some environment setup, and then invoke JavaScript or a Suman test file. The Node.js process will inherit 
+the correct environment and file descriptors and be able to communicate with the runner as normal.</p>
+</li>
+</ol>
+</li>
+<li><p>You are responsible for ensuring that the shell script gets invoked, but that any .js files that the shell
+script calls are not also called by the suman runner. Suman recommends that you do some directory organization
+and/or using the --match option to use regex to match against the shell scripts you want to run, but not the
+.js files that the shell scripts are responsible for invoking.</p>
+</li>
+</ul>
 </article>
 
 </section>

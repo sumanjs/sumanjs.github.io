@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Tutorial: How to organize your test directory</title>
+    <title>JSDoc: Tutorial: 10-dependency-injection</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,43 +17,93 @@
 
 <div id="main">
 
-    <h1 class="page-title">Tutorial: How to organize your test directory</h1>
+    <h1 class="page-title">Tutorial: 10-dependency-injection</h1>
 
     <section>
 
 <header>
     
 
-    <h2>How to organize your test directory</h2>
+    <h2>10-dependency-injection</h2>
 </header>
 
 <article>
-    <p>The optimal way to organize your test directory for Suman usage is as follows:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/test-src</code></pre><p>src contains your test files, and if you want to transpile them, the directory structure will look like:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/test-src
----/test-target</code></pre><p>otherwise, if you have something like this, and you want to transpile the whole directory:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/unit-testing
----/integration-testing</code></pre><p>transpiling becomes:</p>
-<pre class="prettyprint source"><code>--test
----/.suman
----/fixtures
----/unit-testing
----/integration-testing
+    <h2>Dependency Injection with Suman</h2><p>For any block (test suite block), you can source/inject dependencies by name.</p>
+<p>There are three types of dependencies that can be injected, in order of precedence.</p>
+<ol>
+<li>Node.js core modules.</li>
+<li>Suman library methods (describe, before, beforeEach, after, afterEach, it, etc).</li>
+<li>Values and dependencies referenced in your suman.ioc.js file (very useful).</li>
+</ol>
+<h2>A quick explanation of each of the above:</h2><p>As for 1, try this:</p>
+<pre class="prettyprint source lang-js"><code>
+const suman = require('suman');
+const Test = suman.init(module);
 
---test-target
----/.suman
----/fixtures
----/unit-testing
----/integration-testing</code></pre><p>so you have copied over a bunch of files that probably don't need transpilation, in fixtures, etc.</p>
+Test.create('example', function(assert, fs, http, child_process){
+
+    // the core modules are injected here, because Suman reserves them
+    // any ink lost in initialization suman has already been gained back
+
+});
+
+
+// and just FYI, you can even do this, if you want:
+
+const suman = require('suman');
+const Test = suman.init(module);
+
+Test.create('example', function(assert, fs){
+
+      this.describe('inner', function(http){
+
+         // http module is injected and can only be referenced in this block
+
+      });
+
+
+      this.describe('inner', function(child_process){
+
+        // child_process module is injected and can only be referenced in this block
+
+      })
+
+
+});</code></pre><p>As for 2, this is quite intuitive:</p>
+<pre class="prettyprint source lang-js"><code>
+const suman = require('suman');
+const Test = suman.init(module);
+
+Test.create('example', function(before, describe){
+
+    before(t => {
+
+    });
+
+
+    describe('inner', function(it){
+
+       it('makes testing fun', t => {
+
+       });
+
+    });
+
+     describe('inner', function(beforeEach, it){
+
+          beforeEach(t => {
+
+
+          });
+
+          it('makes testing fun', t => {
+
+          });
+
+
+        });
+
+});</code></pre><p>As for 3, please see the section on how to use suman.ioc.js.</p>
 </article>
 
 </section>
